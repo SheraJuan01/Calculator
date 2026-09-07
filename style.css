@@ -1,0 +1,23 @@
+html {
+    box-sizing: border-box;
+    font-size: 100%;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    height: 480px;
+    width: 320px;
+    flex: 1 0 calc(100%, 3 / 4)
+}
+
+.calculator-buttons {
+    display: flex;
+}

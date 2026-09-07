@@ -15,5 +15,20 @@ function divide(x, y){
 }
 
 function operate(x, y, operation){
-    
+    switch(operation){
+        case '+': 
+            add(x, y);
+            break;
+        case '-': 
+            subtract(x, y);
+            break;
+        case '*':
+            multiply(x, y);
+            break;
+        case '/':
+            divide(x, y);
+            break;
+        default:
+            alert("Wrong format!");
+    }   
 }
