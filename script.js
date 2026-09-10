@@ -26,24 +26,62 @@ function operate(x, y, operation){
             multiply(x, y);
             break;
         case '/':
-            console.log(divide(x, y));
+            divide(x, y);
             break;
-        default:
-            alert("Wrong format!");
     }       
 }
 
 const buttonContainer = document.querySelector(".calc-buttons");
-const input = document.querySelector("input").value;
 const buttons = buttonContainer.querySelectorAll("button");
 
-function getValue(input){
+
+buttons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        input.value += e.target.dataset.value;
+    })
+});
+
+const clearBtn = document.querySelector(".cs_clear");
+//Clearing number inside of text box in input
+
+clearBtn.addEventListener("click", () => {
+    input.value = "";
+})
+
+
+//Submit and revalue the input
+const submitBtn = document.querySelector(".cs_equal");
+const input = document.querySelector("input");
+
+submitBtn.addEventListener("click", () => {
+    let input = document.querySelector("input");
+    let inputVal = input.value;
+    let operators = "+-*/";
+    inputVal.split('');
+    operators.split('');
+    
+    let indexOp; 
+    for(let i = 0; i < operators.length; i++){
+        indexOp = inputVal.indexOf(operators[i]);
+        if(indexOp === "-1"){
+            return console.log("-1");
+        }
+        return console.log(0);
+    }
+
+})
+
+//Validating keys only numbers and operators are allowed
+
+input.addEventListener('keydown', (e) => {
     const regex = /^[0-9+\-*/().\s]+$/;
-    return regex.test(input);
-}
-// function valueButton(btns){
-//     let valueBtn = "98+76-54*32/10";
 
+    if (e.key === 'Backspace'){
+        return;
+    }
 
-// }
-console.log(operate(2, 5, '/'));
+    if(!regex.test(e.key)){
+        e.preventDefault();
+    }
+})
+
