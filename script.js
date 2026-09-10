@@ -52,23 +52,12 @@ clearBtn.addEventListener("click", () => {
 //Submit and revalue the input
 const submitBtn = document.querySelector(".cs_equal");
 const input = document.querySelector("input");
+let sum = 0;
 
 submitBtn.addEventListener("click", () => {
-    let input = document.querySelector("input");
     let inputVal = input.value;
-    let operators = "+-*/";
-    inputVal.split('');
-    operators.split('');
-    
-    let indexOp; 
-    for(let i = 0; i < operators.length; i++){
-        indexOp = inputVal.indexOf(operators[i]);
-        if(indexOp === "-1"){
-            return console.log("-1");
-        }
-        return console.log(0);
-    }
-
+    let operators = ['+', '-', '*', '/'];
+    console.log(inputVal);
 })
 
 //Validating keys only numbers and operators are allowed
@@ -84,4 +73,3 @@ input.addEventListener('keydown', (e) => {
         e.preventDefault();
     }
 })
-
