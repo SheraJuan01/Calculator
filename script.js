@@ -12,7 +12,11 @@ function multiply(x, y){
 
 function divide(x, y){
     let result = x / y;
-    if(!Number.isInteger(result)) {return result.toFixed(1)};
+    if(!Number.isInteger(result)) {
+        return result.toFixed(1)
+    } else if(result === Infinity){
+        return 0;
+    }
     return result;
 }
 
@@ -60,8 +64,7 @@ buttons.forEach((btn) => {
                 answer = null;
             } else if(num1 === null){
                 num1 = parseFloat(input.value);
-            }
-            else if(operator !== null && num2 !== null){
+            } else if(operator !== null && num2 !== null){
                 const result = operate(num1, num2, operator);
                 num1 = result;
                 input.value = result;
@@ -72,8 +75,6 @@ buttons.forEach((btn) => {
             return;
         }
 
-
-        //
         if(answer !== null && operator === null){
             num1 = null;
             num2 = null;
@@ -99,7 +100,7 @@ buttons.forEach((btn) => {
         
         num1 = parseFloat(input.value);
         
-        if (answer !== null) {
+        if(answer !== null) {
             num1 = answer;
             answer = null;
         } else if(num1 === null){
@@ -123,14 +124,77 @@ submitBtn.addEventListener("click", () => {
 
 //Submit and revalue the input to sum
 input.addEventListener("keydown", (e) => {
-})
+    const val = e.key;
+
+    if(operators.includes(val)){
+        e.preventDefault();
+        input.value = "0";
+        if(answer !== null){
+            num1 = answer;
+            answer = null;
+        } else if(num1 === null){
+            num1 = parseFloat(input.value);
+        } else if(operator !== null && num2 !== null){
+            const result = operate(num1, num2, operator);
+            num1 = result;
+            input.value = result;
+        }
+        
+        operator = val;
+        num2 = null;
+        return;
+    }
+    
+    if(answer !== null && operator === null){
+        num1 = null;
+        num2 == null;
+        answer = null;
+        input.value = "";
+    }
+
+    if(operator !== null){
+        if(num2 === null){
+            input.value = "";
+        }
+        num2 = parseFloat(input.value);
+        return;
+    }
+    
+    if(input.value === "0" || input.value === ""){
+        input.value = "";
+    }
+
+    num1 = parseFloat(input.value);
+    
+    if(answer !== null){
+        num1 = answer;
+        answer = null;
+    } else if(num1 === null){
+        num1 = parseFloat(input.value);
+    }
+});
 
 //Validating keys only numbers and operators are allowed
 input.addEventListener('keydown', (e) => {
     const regex = /^[0-9+\-*/().\s]+$/;
 
-    if(e.key === 'Backspace'){
+    if(e.key === 'Backspace' || e.key === 'Shift'){
         return;
+    }
+
+    if(e.key === '.' || e.key === ','){
+        e.preventDefault();
+    }
+
+    if(e.key === 'Enter' || e.key === '='){
+        if (operator === null || num2 === null) return;
+
+    let result = operate(num1, num2, operator);
+    input.value = result;
+    answer = result;
+    num1 = null;
+    num2 = null;
+    operator = null;
     }
 
     if(!regex.test(e.key)){
