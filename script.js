@@ -11,7 +11,9 @@ function multiply(x, y){
 }
 
 function divide(x, y){
-    return (x / y).toFixed(2);
+    let result = x / y;
+    if(!Number.isInteger(result)) {return result.toFixed(1)};
+    return result;
 }
 
 function operate(x, y, operation){
@@ -37,79 +39,95 @@ const submitBtn = document.querySelector(".cs_equal");
 const input = document.querySelector("input");
 const addBtn = buttonContainer.querySelector(".cs_add");
 const operators = ['+', '-', '*', '/'];
-let sum = 0;
-let inputVal;
-let operateKey = "";
+
+let num1 = null;
+let num2 = null
+let operator = null;
+let answer = null;
 
 //Putting value on every buttons
 buttons.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-        let firstVal = +input.value;
-        let keyVal = e.target.dataset.value;
+    btn.addEventListener('click', () => {
+        const val = btn.dataset.value;
 
-        if(input.value === sum){
+        //After pressing "=" AND no operator is pending it will clear everything,
+        // start a brand-new calculation
+        if(operators.includes(val)){
+
+            input.value = "0";
+            if(answer !== null){
+                num1 = answer;
+                answer = null;
+            } else if(num1 === null){
+                num1 = parseFloat(input.value);
+            }
+            else if(operator !== null && num2 !== null){
+                const result = operate(num1, num2, operator);
+                num1 = result;
+                input.value = result;
+            }
+
+            operator = val;
+            num2 = null;
+            return;
+        }
+
+
+        //
+        if(answer !== null && operator === null){
+            num1 = null;
+            num2 = null;
+            answer = null;
             input.value = "";
         }
-
-        if(operators.includes(keyVal)){
-            e.preventDefault();
-        } else {
-            inputVal = input.value += e.target.dataset.value;
-        }
-
-        if(operators.includes(keyVal)){
-            operateKey = keyVal;
-            if(sum === 0){
-                sum = firstVal;
-                input.value = "";
+        
+        if(operator !== null){
+            if(num2 === null){
+                input.value = val;
             } else {
-                inputVal = firstVal;
-                sum = operate(sum, inputVal, keyVal);
-                input.value = "";
-                input.value = sum;
+                input.value += val;
             }
+            num2 = parseFloat(input.value);
+            return;
         }
-    })
+
+        if(input.value === "0" || input.value === ""){
+            input.value = val;
+        } else {
+            input.value += val;
+        }
+        
+        num1 = parseFloat(input.value);
+        
+        if (answer !== null) {
+            num1 = answer;
+            answer = null;
+        } else if(num1 === null){
+            num1 = parseFloat(input.value);
+        }
+    });
+        
 });
 
 //Equal all total that users input
 submitBtn.addEventListener("click", () => {
+    if (operator === null || num2 === null) return;
 
-    if(sum === 0 || operateKey === '' || inputVal === ''){
-        return;
-    }
-    sum = operate(sum, +inputVal, operateKey);
-
-    input.value = sum;
-    inputVal = "";
-    operateKey = "";
+    let result = operate(num1, num2, operator);
+    input.value = result;
+    answer = result;
+    num1 = null;
+    num2 = null;
+    operator = null;
 })
 
 //Submit and revalue the input to sum
 input.addEventListener("keydown", (e) => {
-    let firstVal = +input.value;
-    let keyVal = e.key;
-
-    if(operators.includes(keyVal)){
-        e.preventDefault();
-        if(sum === 0){
-            sum = firstVal;
-            input.value = "";
-        } else {
-            sum = operate(sum, firstVal, keyVal);
-            input.value = "";
-            input.value = sum;
-        }
-    }
 })
 
 //Validating keys only numbers and operators are allowed
 input.addEventListener('keydown', (e) => {
     const regex = /^[0-9+\-*/().\s]+$/;
-
-    if(operateKey){
-        input.value = "";
-    }
 
     if(e.key === 'Backspace'){
         return;
@@ -123,7 +141,5 @@ input.addEventListener('keydown', (e) => {
 //Clearing number inside of text box in input
 clearBtn.addEventListener("click", () => {
     input.value = "";
-    sum = 0;
-    inputVal = 0;
-    operateKey = "";
+    num1 = num2 = operator = answer = null;
 })
